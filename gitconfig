@@ -1,0 +1,29 @@
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[user]
+	name = Marius Hegele
+	email = marius.hegele@mail.de
+[alias]
+	lg = log -graph -oneline --decorate
+	lga = log --graph --oneline --decorate --all
+	lgb = log -graph -oneline --decorate --all
+
+	st = status 
+	co = checkout
+	ci = commit
+	br = branch
+	df = diff
+	rso = remote show origin
+	me = config user.name
+[core]
+	askpass = git-gui--askpass
+	autocrlf = input
+	safecrlf = false
+[color]
+        ui = auto
+
+[push]
+        default = upstream
