@@ -5,3 +5,5 @@ runtime! syntax/python.vim syntax/python/*.vim
 syntax keyword mypythonKeyword await
 
 compiler pyunit
+
+setlocal foldmethod=syntax

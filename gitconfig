@@ -26,4 +26,4 @@
         ui = auto
 
 [push]
-        default = upstream
+        default = current

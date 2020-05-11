@@ -35,9 +35,6 @@ Plugin 'git://git.wincent.com/command-t.git'
 " different version somewhere else.
 " Plugin 'ascenator/L9', {'name': 'newL9'}
 
-" All of your Plugins must be added before the following line
-Plugin 'lervag/vimtex'
-
 " Correct python indentation"
 Plugin 'vim-scripts/indentpython.vim'
 
@@ -54,6 +51,10 @@ Plugin 'scrooloose/nerdtree'
 " File Search "
 Plugin 'ctrlpvim/ctrlp.vim'
 
+" LaTeX "
+"Plugin 'lervag/vimtex'
+Plugin 'LaTeX-Box-Team/LaTeX-Box'
+
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -67,6 +68,7 @@ filetype plugin indent on    " required
 " :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
 "
 " see :h vundle for more details or wiki for FAQ
+
 
 
 " Plugin Settings"
@@ -88,7 +90,9 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
-let g:syntastic_python_checkers = ['flake8']
+let g:syntastic_mode_map = { 'passive_filetypes': ['tex'] }
+"let g:syntastic_tex_checkers = ['chktex']
+"let g:syntastic_tex_lacheck_quiet_messages = { 'regex': '\Vpossible unwanted space at' }
 
 "YouCompleteMe settings"
 
@@ -107,22 +111,21 @@ let g:ctrlp_clear_cache_on_exit = 1
 let g:ctrlp_lazy_update = 20
 
 
-
 " Put your non-Plugin stuff after this line
 " ------------------------------------------------------- "
 
 colo desert
+syntax on
 
 let python_highlight_all=1
 
-syntax on
+
 set softtabstop=4
 set shiftwidth=4
 set expandtab
 set autoindent
 inoremap <S-Tab> <C-d>
 
-set clipboard=unnamed
 vmap <C-c> :w !pbcopy<CR><CR>
 
 " Set encoding"
@@ -131,7 +134,8 @@ set encoding=utf-8
 " OPTIONAL: Starting with Vim 7, the filetype of empty .tex files defaults to
 " 'plaintex' instead of 'tex', which results in vim-latex not being loaded.
 " The following changes the default filetype back to 'tex':
-let g:tex_flavor='latex'
+"let g:tex_flavor='latex'
+"let g:vimtex_syntax_enabled=1
 
 " Shift between windows"
 nnoremap <C-J> <C-W><C-J>
@@ -148,7 +152,18 @@ nnoremap Gr :vimgrep <cword> %:p:h/*<CR>
 "nnoremap GR :vimgrep '\b<cword>\b' %:p:h/*<CR>
 
 " Make"
-nnoremap <C-M> :w\|:make!<CR>
+nnoremap <C-P> :w\|:make!<CR>
+
+" hide __pycache__ and venv in vimgrep
+set wildignore+=__pycache__/**,*.pyc
+set wildignore+=venv/**
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" File extension specific
+"
+
+filetype plugin on
 
 " Python PEP8 settings"
 "au BufNewFile,BufRead *.py
@@ -160,12 +175,9 @@ nnoremap <C-M> :w\|:make!<CR>
 "    \ set autoindent |
 "    \ set fileformat=unix
 
-
+" Make
 au BufNewFile,BufRead Makefile
     \ set noexpandtab
-" hide __pycache__ and venv in vimgrep
-set wildignore+=__pycache__/**,*.pyc
-set wildignore+=venv/**
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
