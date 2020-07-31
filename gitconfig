@@ -4,8 +4,9 @@
 	process = git-lfs filter-process
 	required = true
 [user]
+	mail = marius.hegele@ibm.com
 	name = Marius Hegele
-	email = marius.hegele@mail.de
+	email = marius.hegele@ibm.com
 [alias]
 	lg = log -graph -oneline --decorate
 	lga = log --graph --oneline --decorate --all

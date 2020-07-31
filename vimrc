@@ -22,7 +22,7 @@ Plugin 'tpope/vim-fugitive'
 " Plugin 'L9'
 
 " Git plugin not hosted on GitHub
-Plugin 'git://git.wincent.com/command-t.git'
+" Plugin 'git://git.wincent.com/command-t.git'
 
 " git repos on your local machine (i.e. when working on your own plugin)
 " Plugin 'file:///home/gmarik/path/to/plugin'
@@ -35,11 +35,13 @@ Plugin 'git://git.wincent.com/command-t.git'
 " different version somewhere else.
 " Plugin 'ascenator/L9', {'name': 'newL9'}
 
-" Correct python indentation"
+" Correct python indentation/formatting"
 Plugin 'vim-scripts/indentpython.vim'
+Plugin 'vim-python/python-syntax'
 
-" Auto-cmplete for Python"
+" Auto-cmplete"
 " Plugin 'ycm-core/YouCompleteMe'
+Plugin 'ajh17/VimCompletesMe'
 
 " Syntax Checking/Highlighting"
 Plugin 'vim-syntastic/syntastic'
@@ -54,6 +56,9 @@ Plugin 'ctrlpvim/ctrlp.vim'
 " LaTeX "
 "Plugin 'lervag/vimtex'
 Plugin 'LaTeX-Box-Team/LaTeX-Box'
+
+" verilog "
+Plugin 'vhda/verilog_systemverilog.vim'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -85,6 +90,7 @@ set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
+" let g:syntastic_debug=33
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
@@ -93,6 +99,9 @@ let g:syntastic_check_on_wq = 0
 let g:syntastic_mode_map = { 'passive_filetypes': ['tex'] }
 "let g:syntastic_tex_checkers = ['chktex']
 "let g:syntastic_tex_lacheck_quiet_messages = { 'regex': '\Vpossible unwanted space at' }
+
+" cpp
+" let g:syntastic_cpp_check_header = 1
 
 "YouCompleteMe settings"
 
@@ -143,8 +152,6 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-
-
 " Search for word under cursor:
 nnoremap gr :vimgrep <cword> */**<CR>
 nnoremap Gr :vimgrep <cword> %:p:h/*<CR>
@@ -152,11 +159,15 @@ nnoremap Gr :vimgrep <cword> %:p:h/*<CR>
 "nnoremap GR :vimgrep '\b<cword>\b' %:p:h/*<CR>
 
 " Make"
-nnoremap <C-P> :w\|:make!<CR>
+nnoremap <F2> :w\|:make!<CR>
 
 " hide __pycache__ and venv in vimgrep
 set wildignore+=__pycache__/**,*.pyc
 set wildignore+=venv/**
+
+
+" Split vertical instead of horizontal "
+set diffopt+=vertical
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -165,18 +176,10 @@ set wildignore+=venv/**
 
 filetype plugin on
 
-" Python PEP8 settings"
-"au BufNewFile,BufRead *.py
-"    \ set tabstop=4 |
-"    \ set softtabstop=4 |
-"    \ set shiftwidth=4 |
-"    \ set textwidth=79 |
-"    \ set expandtab |
-"    \ set autoindent |
-"    \ set fileformat=unix
 
 " Make
-au BufNewFile,BufRead Makefile
+au BufNewFile,BufRead Makefile*
+    \ set syntax=make |
     \ set noexpandtab
 
 
@@ -307,7 +310,7 @@ endif
 
 
 " Add a bit extra margin to the left
-set foldcolumn=1
+"set foldcolumn=1
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -429,11 +432,11 @@ map <leader>te :tabedit <C-r>=expand("%:p:h")<cr>/
 map <leader>cd :cd %:p:h<cr>:pwd<cr>
 
 " Specify the behavior when switching between buffers 
-try
-  set switchbuf=useopen,usetab,newtab
-  set stal=2
-catch
-endtry
+" try
+"   set switchbuf=useopen,usetab,newtab
+"   set stal=2
+" catch
+" endtry
 
 " Return to last edit position when opening files (You want this!)
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
@@ -445,8 +448,36 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 " Always show the status line
 set laststatus=2
 
+function! GitBranch()
+    return system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
+endfunction
+
+function! StatuslineGit()
+    let l:branchname = GitBranch()
+    return strlen(l:branchname) > 0?'  '.l:branchname.' ':''
+endfunction
+"
 " Format the status line
-set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
+"set statusline=
+set statusline+=%#PmenuSel#
+set statusline+=%{StatuslineGit()}
+set statusline+=%#LineNr#
+set statusline+=\ %f
+set statusline+=%m\
+set statusline+=%=
+set statusline+=%#CursorColumn#
+set statusline+=\ %y
+set statusline+=\ %{&fileencoding?&fileencoding:&encoding}
+set statusline+=\[%{&fileformat}\]
+set statusline+=\ %p%%
+set statusline+=\ %l:%c
+set statusline+=\ 
+
+hi PmenuSel ctermfg=White ctermbg=darkgrey
+hi LineNr ctermfg=White ctermbg=grey
+hi CursorColumn ctermfg=White
+
+"set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -563,4 +594,12 @@ function! VisualSelection(direction, extra_filter) range
     let @/ = l:pattern
     let @" = l:saved_reg
 endfunction
+
+au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown.pandoc 
+
+"""""""
+" finally open local vimrc
+if filereadable(".vimrc") && getcwd() != expand("~")
+    so .vimrc
+endif
 
