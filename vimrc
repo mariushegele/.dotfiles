@@ -54,8 +54,8 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'ctrlpvim/ctrlp.vim'
 
 " LaTeX "
-"Plugin 'lervag/vimtex'
-Plugin 'LaTeX-Box-Team/LaTeX-Box'
+Plugin 'lervag/vimtex'
+"Plugin 'LaTeX-Box-Team/LaTeX-Box'
 
 " verilog "
 Plugin 'vhda/verilog_systemverilog.vim'
@@ -103,6 +103,13 @@ let g:syntastic_mode_map = { 'passive_filetypes': ['tex'] }
 " cpp
 " let g:syntastic_cpp_check_header = 1
 
+"vimtex
+" OPTIONAL: Starting with Vim 7, the filetype of empty .tex files defaults to
+" 'plaintex' instead of 'tex', which results in vim-latex not being loaded.
+" The following changes the default filetype back to 'tex':
+let g:tex_flavor='latex'
+let g:vimtex_syntax_enabled = 1
+
 "YouCompleteMe settings"
 
 "Ctrl-p
@@ -140,11 +147,6 @@ vmap <C-c> :w !pbcopy<CR><CR>
 " Set encoding"
 set encoding=utf-8
 
-" OPTIONAL: Starting with Vim 7, the filetype of empty .tex files defaults to
-" 'plaintex' instead of 'tex', which results in vim-latex not being loaded.
-" The following changes the default filetype back to 'tex':
-"let g:tex_flavor='latex'
-"let g:vimtex_syntax_enabled=1
 
 " Shift between windows"
 nnoremap <C-J> <C-W><C-J>
